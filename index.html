@@ -267,6 +267,9 @@ textarea{width:100%;font-family:var(--font-mono);font-size:15px;letter-spacing:.
 .tline{max-width:68ch;word-break:keep-all}
 .qpins{display:inline-flex;gap:2px;vertical-align:middle;margin:0 2px}
 .qpins .pin{width:10px;height:24px}
+.stepnav{display:flex;flex-wrap:wrap;justify-content:space-between;align-items:center;gap:10px;padding:16px 0 4px;border-top:1px solid var(--line);margin-top:4px}
+.stepnav .btn{display:inline-flex;align-items:center;gap:8px}
+.stepnav .btn .sm{font-size:12px;font-weight:500;opacity:.85}
 .pin{display:inline-block;width:14px;height:34px;flex:0 0 auto}
 .pin svg{width:100%;height:100%;display:block}
 .dq{display:grid;gap:8px}
@@ -872,6 +875,23 @@ rOrder();rLine();
 $("#tShop").innerHTML="RYGB".split("").map(pin).join("")+'<span class="arrowr">→</span>'+D.slice(0,4).map(d=>donut(d)).join("")+'<span class="tmore">…20</span>';
 $("#tCell").innerHTML="AUGC".split("").map(x=>`<span class="b ${x}">${x}</span>`).join("")+'<span class="arrowr">→</span>'+'<span class="bead"></span><span class="bead b2"></span><span class="bead b3"></span><span class="bead b4"></span><span class="tmore">…20</span>';
 $("#dGo").onclick=()=>{document.querySelector('nav.steps [data-tab="s1"]').click()};
+})();
+</script>
+
+<script>
+(function(){
+const tabs=[...document.querySelectorAll("nav.steps button")];
+const name=t=>t.textContent.replace(/^\s*\d+/,"").trim();
+tabs.forEach((t,i)=>{
+  if(i===0)return;
+  const sec=document.getElementById(t.dataset.tab);if(!sec)return;
+  const prev=tabs[i-1],next=tabs[i+1];
+  const nav=document.createElement("div");nav.className="stepnav";
+  nav.innerHTML=`<button class="btn ghost" data-go="${prev.dataset.tab}">← <span><span class="sm">이전 단계</span> ${name(prev)}</span></button>`+
+    (next?`<button class="btn" data-go="${next.dataset.tab}"><span><span class="sm">다음 단계</span> ${name(next)}</span> →</button>`:`<button class="btn" data-go="${tabs[0].dataset.tab}"><span><span class="sm">탐구 완료!</span> 처음으로</span> ↺</button>`);
+  sec.appendChild(nav);
+  nav.querySelectorAll("[data-go]").forEach(b=>b.onclick=()=>document.querySelector(`nav.steps [data-tab="${b.dataset.go}"]`).click());
+});
 })();
 </script>
 
